@@ -1,28 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStudentDto } from './dto/create-student.dto';
 
+// Define the shape of a Student object stored in memory
+// This represents what a student looks like in our backend
+type Student = {
+    id: number;
+    name: string;
+    registrationNumber: string;
+    course: string;
+    year: number;
+};
+
 @Injectable()
 export class StudentsService {
-    // Temporary in-memory storage (we will replace with DB later)
-    private students = [];
+    // Explicitly tell TypeScript that this array will store Student objects
+    private students: Student[] = [];
 
     // Return all students
-    findAll() {
+    findAll(): Student[] {
         return this.students;
     }
 
     // Create a new student
-    create(createStudentDto: CreateStudentDto) {
-        // Generate a fake ID (database will do this later)
-        const newStudent = {
-            id: this.students.length + 1,
-            ...createStudentDto, // spread validated DTO data
+    create(createStudentDto: CreateStudentDto): Student {
+        // Create a new student object
+        const newStudent: Student = {
+            id: this.students.length + 1, // backend-controlled ID
+            ...createStudentDto,          // safe, validated data
         };
 
-        // Save student in memory
+        // Now TypeScript is happy because students[] expects Student objects
         this.students.push(newStudent);
 
-        // Return created student
         return newStudent;
     }
 }
