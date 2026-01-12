@@ -1,12 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { StudentsService } from './students.service';
+import { CreateStudentDto } from './dto/create-student.dto';
 
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) { }
 
+  // Handle GET /students
   @Get()
   findAll() {
     return this.studentsService.findAll();
+  }
+
+  // Handle POST /students
+  @Post()
+  create(@Body() createStudentDto: CreateStudentDto) {
+    // The body is automatically mapped to CreateStudentDto
+    return this.studentsService.create(createStudentDto);
   }
 }
